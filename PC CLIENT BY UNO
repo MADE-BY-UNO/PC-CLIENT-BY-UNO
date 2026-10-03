@@ -1,0 +1,98 @@
+keypress(Enum.KeyCode.Z)
+
+spawn(function()
+	local UserInputService = game:GetService("UserInputService")
+	local Players = game:GetService("Players")
+	local RunService = game:GetService("RunService")
+	local StarterGui = game:GetService("StarterGui")
+	local ReplicatedStorage = game:GetService("ReplicatedStorage")
+	local PlayerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
+	local ShiftlockGui = PlayerGui:FindFirstChild("ShiftlockGui")
+	ShiftlockGui:FindFirstChild("Button")
+	ShiftlockGui:Destroy()
+	local ShiftlockGui2 = StarterGui:FindFirstChild("ShiftlockGui")
+	local clone = ShiftlockGui2:Clone()
+	clone.Parent = PlayerGui
+	local ShiftlockGui3 = PlayerGui:WaitForChild("ShiftlockGui")
+	local Button = ShiftlockGui3:WaitForChild("Button")
+	Button.Visible = true
+	Button.Image = "rbxassetid://13755007955"
+	Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
+
+	Players.LocalPlayer.CharacterAdded:Connect(function(character)
+		local HumanoidRootPart = character:WaitForChild("HumanoidRootPart")
+	end)
+
+	Button.MouseButton1Click:Connect(function()
+		Button.Image = "rbxassetid://13755021175"
+	end)
+
+	RunService.RenderStepped:Connect(function(deltaTime)
+		HumanoidRootPart.CFrame = CFrame.new(HumanoidRootPart.Position, (HumanoidRootPart.Position + Vector3.new(0, 0, 0)))
+	end)
+end)
+
+spawn(function()
+	local PlayerGui2 = Players.LocalPlayer:WaitForChild("PlayerGui")
+	local MatchLeaderboardToggleButton = PlayerGui2.TopBar.RightFrame:FindFirstChild("MatchLeaderboardToggleButton")
+	MatchLeaderboardToggleButton.Visible = false
+
+	ReplicatedStorage.Match.OnMatchStarted.OnClientEvent:Connect(function()
+		MatchLeaderboardToggleButton.Visible = true
+		local changedSignal2 = MatchLeaderboardToggleButton:GetPropertyChangedSignal("Visible")
+
+		changedSignal2:Connect(function()
+			MatchLeaderboardToggleButton.Visible = true
+		end)
+	end)
+
+	ReplicatedStorage.Remotes.OnMatchFinished.OnClientEvent:Connect(function()
+		MatchLeaderboardToggleButton.Visible = false
+	end)
+end)
+
+spawn(function()
+	local PlayerGui3 = Players.LocalPlayer:WaitForChild("PlayerGui")
+	local ControlsGuiHandler = PlayerGui3.Controls:FindFirstChild("ControlsGuiHandler")
+	local WeaponControlsGuiHandler = PlayerGui3.Controls:FindFirstChild("WeaponControlsGuiHandler")
+	ControlsGuiHandler.Disabled = true
+	WeaponControlsGuiHandler.Disabled = true
+	local TabKeybind = PlayerGui3.Controls:FindFirstChild("TabKeybind")
+	TabKeybind.Visible = false
+	local changedSignal = TabKeybind:GetPropertyChangedSignal("Visible")
+
+	changedSignal:Connect(function()
+	end)
+end)
+
+spawn(function()
+	local CollectionService = game:GetService("CollectionService")
+
+	Players.LocalPlayer.CharacterAdded:Connect(function(character2)
+		local PlayerGui5 = Players.LocalPlayer:WaitForChild("PlayerGui")
+		local KnifeTouchControls2 = PlayerGui5:WaitForChild("KnifeTouchControls")
+		KnifeTouchControls2.Enabled = false
+
+		RunService.Heartbeat:Connect(function(deltaTime3)
+			local children2 = character2:GetChildren()
+
+			for i2, v2 in ipairs(children2) do
+				CollectionService:HasTag(v2, "KnifeTool")
+				KnifeTouchControls2.Enabled = true
+			end
+		end)
+	end)
+
+	local PlayerGui4 = Players.LocalPlayer:WaitForChild("PlayerGui")
+	local KnifeTouchControls = PlayerGui4:WaitForChild("KnifeTouchControls")
+	KnifeTouchControls.Enabled = false
+
+	RunService.Heartbeat:Connect(function(deltaTime2)
+		local children = Players.LocalPlayer.Character:GetChildren()
+
+		for i, v in ipairs(children) do
+			CollectionService:HasTag(v, "KnifeTool")
+			KnifeTouchControls.Enabled = true
+		end
+	end)
+end)
